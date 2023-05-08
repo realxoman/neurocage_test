@@ -12,6 +12,7 @@ class CageAnalytical(models.Model):
         Ok      = 2, _("Ok")
         Perfect = 3, _("Perfect")
 
-    cage_id     = models.ForeignKey("cages.Cage", verbose_name=_("Cage Id"), on_delete=models.CASCADE)
+    cage_id     = models.ForeignKey("cages.Cage", verbose_name=_("Cage Id"), on_delete=models.CASCADE, related_name="cage_related")
     status      = models.IntegerField(_("Cage Status"), choices=Status.choices)
+    time_taken  = models.IntegerField(_("Time Taken"), default=0)
     created_at  = models.DateTimeField(_("Cage Creation Time"), auto_now_add=True)
