@@ -10,32 +10,13 @@ services:
     volumes:
       - ./static/:/static/
       - ./media/:/media/
-      - /var/log/dezh-back/nginx/:/var/log/nginx/
-      - ./deploy/nginx:/etc/nginx/conf.d
+      - /var/log/neurocage/nginx/:/var/log/nginx/
+      - ./src/nginx:/etc/nginx/conf.d
     depends_on:
       - web
-  web:
-    build: .
-    container_name: web
-    restart: always
-    command: >
-      sh -c "
-        python manage.py compilemessages;
-        python manage.py collectstatic --noinput;
-        gunicorn --bind=0.0.0.0:8080 --timeout=90 --reload config.wsgi:application;
-      "
-    volumes:
-      - .:/app/dezhdoor/
-      - ./static/:/static
-      - ./media/:/app/dezhdoor/media/
-      - /var/log/dezh-back:/var/log/dezh-back
-      - cachedata:/cachec
-    ports:
-      - 8080:8080
-    env_file:
-      - .env
+      
 
-  postgres:
+  db:
     restart: always
     image: postgres:latest
     volumes:
@@ -46,20 +27,57 @@ services:
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=${DB_PASS}
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  celery-worker:
+
+  web:
     build: .
+    image: neurocage_test-web:latest
+    container_name: web
+    restart: always
+    command: >
+      sh -c "
+        systemctl start neuroflask.service;
+        systemctl enable neuroflask.service;
+        python manage.py compilemessages;
+        python manage.py collectstatic --noinput;
+        gunicorn --bind=0.0.0.0:8080 --timeout=90 --reload neurotest.wsgi:application;
+      "
+    volumes:
+      - ./src/app/:/app/neurocage/
+      - ./src/app/static/:/static
+      - ./src/app/media/:/app/neurocage/media/
+      - /var/log/neurocage:/var/log/neurocage
+      - cachedata:/cachec
+      - ./src/app/neurocage_test_project/neuroflask.service:/lib/systemd/system/neuroflask.service
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: "service_healthy"
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  celery:
+    build: .
+    image: neurocage_test-web:latest
     command:
       [
         "celery",
         "-A",
-        "_base",
+        "neurotest",
         "worker",
         "-l",
         "info",
@@ -67,20 +85,17 @@ services:
         "--concurrency=10",
       ]
     volumes:
-      - .:/app/webelopers/
+      - ./src/app/:/app/neurocage/
     env_file:
       - .env
     depends_on:
-      - rabbit
-    links:
-      - rabbit
+      rabbit:
+        condition: "service_started"
+      db:
+        condition: "service_healthy"
+      web:
+        condition: "service_started"
       
-  rabbit:
-    hostname: rabbit
-    image: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
 
 
 volumes:

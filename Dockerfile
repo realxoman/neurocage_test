@@ -10,5 +10,8 @@ WORKDIR /app/neurocage
 COPY ./src/app/requirements.txt /app/neurocage
 RUN pip install -r requirements.txt
 
+RUN apt update
+RUN apt install -y systemctl
+
 # copy project
 COPY ./ /app/neurocage
