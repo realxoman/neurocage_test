@@ -6,6 +6,10 @@
 {% block customJs %}{% endblock customJs %}
 
 {% block content %}
+<div class="flex justify-between">
+<a href="{% url 'home' %}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 "><span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">Back to Home</span></a>
+  <a href="{% url 'cages:create' %}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300  focus:ring-4 focus:outline-none focus:ring-lime-200"><span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">Create a Cage</span></a>
+</div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table class="w-full text-sm text-left text-gray-500">
         <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white">
@@ -56,7 +60,7 @@
                     {{cage.dimensions}}
                 </td>
                 <td class="px-6 py-4">
-                    {{cage.created_at}}
+                    {{cage.latest_status_label}}
                 </td>
                 <td class="px-6 py-4 text-right">
                     <a href="{% url 'cages:detail' pk=cage.id %}" class="font-medium text-blue-600 hover:underline">View Detail</a>

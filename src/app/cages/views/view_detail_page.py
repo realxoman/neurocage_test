@@ -16,6 +16,4 @@ class CageDetailView(DetailView):
             created_at__date=timezone.now().date()
         )
         context['cage_analytical_today'] = cage_analytical_today
-        context['cage_functionality'] = cage_analytical_today.annotate(count=Count('id')).order_by('-count').distinct(
-            'cage_id').values('status')
         return context
