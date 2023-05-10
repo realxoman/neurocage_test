@@ -6,5 +6,103 @@
 {% block customJs %}{% endblock customJs %}
 
 {% block content %}
-List Cages Page
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500">
+        <caption class="p-5 text-lg font-semibold text-left text-gray-900 bg-white">
+            Our Cages
+            <p class="mt-1 text-sm font-normal text-gray-500">Browse a list of Neurocage products designed to help you work.</p>
+        </caption>
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Cage Label
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cage Color
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cage Material
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cage Version
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cage Dimensions
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cage Status
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cage in cages %}
+            <tr class="bg-white border-b">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    {{cage.label}}
+                </th>
+                <td class="px-6 py-4">
+                    {{cage.color}}
+                </td>
+                <td class="px-6 py-4">
+                    {{cage.material}}
+                </td>
+                <td class="px-6 py-4">
+                    {{cage.version}}
+                </td>
+                <td class="px-6 py-4">
+                    {{cage.dimensions}}
+                </td>
+                <td class="px-6 py-4">
+                    {{cage.created_at}}
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <a href="{% url 'cages:detail' pk=cage.id %}" class="font-medium text-blue-600 hover:underline">View Detail</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+    <nav class="flex items-center justify-center p-4" aria-label="Table navigation">
+        <ul class="inline-flex items-center -space-x-px">
+            {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}" class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">
+                    <span class="sr-only">Previous</span>
+                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </a>
+            </li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li>
+                        <a aria-current="page" class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">{{ i }}</a>
+                    </li>
+                {% elif i > page_obj.number|add:'-2' and i < page_obj.number|add:'2' %}
+                    <li>
+                        <a href="?page={{ i }}" aria-current="page" class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.paginator.num_pages > page_obj.number|add:'1' %}
+            <li>
+                <a href="?page={{ page_obj.number|add:'2' }}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">&hellip;</a>
+            </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}" class="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">
+                    <span class="sr-only">Next</span>
+                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
 {% endblock content %}

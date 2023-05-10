@@ -12,6 +12,9 @@ NeuroCage Systems Test Ali Esmaeili
 {% endblock %}
 
 {% block content %}
+<div class="pt-20 pb-20">
+
+
   <h1 class="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
     Neurocage<!--  --> <span class="relative whitespace-nowrap text-blue-600">
       <svg aria-hidden="true" viewBox="0 0 418 42" class="absolute left-0 top-2/3 h-[0.58em] w-full fill-blue-300/70" preserveAspectRatio="none">
@@ -23,5 +26,5 @@ NeuroCage Systems Test Ali Esmaeili
     <a href="{% url 'cages:list' %}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 "><span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">See List of The Cages</span></a>
     <a href="{% url 'cages:create' %}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300  focus:ring-4 focus:outline-none focus:ring-lime-200"><span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">Create a New Cage</span></a>
   </div>
-
+</div>
 {% endblock %}
