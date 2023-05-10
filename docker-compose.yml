@@ -8,8 +8,8 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./static/:/static/
-      - ./media/:/media/
+      - ./src/app/media/:/media/
+      - ./src/app/static/:/static/
       - /var/log/neurocage/nginx/:/var/log/nginx/
       - ./src/nginx:/etc/nginx/conf.d
     depends_on:
@@ -20,7 +20,7 @@ services:
     restart: always
     image: postgres:latest
     volumes:
-      - ./media/:/media/
+      - ./src/app/media/:/media/
       - dbdata:/var/lib/postgresql/data/
     env_file:
       - .env
@@ -44,7 +44,8 @@ services:
       sh -c "
         systemctl start neuroflask.service;
         systemctl enable neuroflask.service;
-        python manage.py compilemessages;
+        python manage.py makemigrations;
+        python manage.py migrate;
         python manage.py collectstatic --noinput;
         gunicorn --bind=0.0.0.0:8080 --timeout=90 --reload neurotest.wsgi:application;
       "
@@ -66,6 +67,7 @@ services:
   rabbit:
     hostname: rabbit
     image: rabbitmq
+    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -73,6 +75,7 @@ services:
   celery:
     build: .
     image: neurocage_test-web:latest
+    restart: always
     command:
       [
         "celery",
