@@ -7,10 +7,10 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name="main.html")),
-    path('cages/', include('cages.urls'), name='cages'),
+    path('cages', include('cages.urls'), name='cages'),
     
     # Admin Panel Can be comment under production until we need.
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
 ]
 
 if settings.DEBUG:
