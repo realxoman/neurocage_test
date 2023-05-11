@@ -19,4 +19,4 @@ class CageAnalytical(models.Model):
     created_at  = models.DateTimeField(_("Cage Analytical Creation Time"), auto_now_add=True)
 
     def __str__(self):
-        return f"{self.cage_id} - {self.created_at}"
+        return f"{self.cage} - {self.created_at}"
