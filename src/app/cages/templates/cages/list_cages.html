@@ -60,11 +60,30 @@
                     {{cage.dimensions}}
                 </td>
                 <td class="px-6 py-4">
-                    {% if cage.last_status.get_status_display %}
-                        {{cage.last_status.get_status_display}}
-                    {% else %}
-                        N/A
-                    {% endif %}
+
+                    <div href="#" class="flex justify-start items-center">
+                        {% if cage.last_status.get_status_display  == 'Bad' %}
+                            <div class="h-2.5 w-2.5 rounded-full bg-pink-500 mr-2"></div>
+                            <div class="text-pink-800 font-semibold">
+                        {% elif cage.last_status.get_status_display  == 'Ok' %}
+                            <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
+                            <div class="text-yellow-800 font-semibold">
+                        {% elif cage.last_status.get_status_display  == 'Perfect' %}
+                            <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                            <div class="text-green-800 font-semibold">
+                        {% else %}
+                            <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                            <div class="text-red-800 font-semibold">
+                        {% endif %}
+                        {% if cage.last_status.get_status_display %}
+                            {{cage.last_status.get_status_display}}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                        </div> 
+                    </div> 
+
+                    
                 </td>
                 <td class="px-6 py-4 text-right">
                     <a href="{% url 'cages:detail' pk=cage.id %}" class="font-medium text-blue-600 hover:underline">View Detail</a>

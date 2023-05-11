@@ -2,15 +2,19 @@ from neurotest.celery import app
 from cages.models import Cage, CageAnalytical
 import requests
 from django.conf import settings
+from celery import shared_task
 
 @app.task
 def cage_health_checker(cage):
-    request_health = requests.get(f"{settings.HEALTH_CHECKER_URL}{cage.id}")
+    request_health = requests.get(f"{settings.HEALTH_CHECKER_URL}{cage}/")
     request_health_result = request_health.json()
+    my_status = request_health_result.get('status')
+    if type(my_status) != type(int()):
+        my_status = 0
 
     cage_analytical = CageAnalytical(
-        cage=cage,
-        status=request_health_result.get(),
+        cage_id=cage,
+        status=my_status,
         time_taken=request_health.elapsed.total_seconds(),
         )
     
@@ -19,7 +23,7 @@ def cage_health_checker(cage):
 
 
 
-@app.task
+@shared_task
 def auto_cage_health_checker():
     cages = Cage.objects.all()
     for cage in cages:

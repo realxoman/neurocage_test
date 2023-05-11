@@ -9,6 +9,3 @@ class CageCreateView(CreateView):
     success_url = reverse_lazy('cages:list')
     template_name = 'cages/create_cage.html'
     
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        return response
