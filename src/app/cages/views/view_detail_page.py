@@ -12,11 +12,11 @@ class CageDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cage_analytical_today = CageAnalytical.objects.filter(
-            cage_id=self.object,
+            cage=self.object.id,
             created_at__date=timezone.now().date()
         )
-        context['cage_analytical_today'] = cage_analytical_today
-        perfects_count = cage_analytical_today.filter(status=3).count()
-        if perfects_count:
+        if cage_analytical_today.count() >= 1:
+            context['cage_analytical_today'] = cage_analytical_today
+            perfects_count = cage_analytical_today.filter(status=3).count()
             context['functionality_percentages'] = int((perfects_count/len(cage_analytical_today)) * 100)
         return context

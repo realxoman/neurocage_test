@@ -22,17 +22,4 @@ class Cage(models.Model):
     def last_status(self):
         last_status = CageAnalytical.objects.filter(cage=self).order_by('-created_at').only('status').first()
         return last_status
-    
-    # def save(
-    #         self, force_insert=False, force_update=False, using=None, update_fields=None
-    #     ):
-    #     flag = False
-    #     if self.id:
-    #         flag = True
 
-    #     data = super().save(force_insert,force_update,using,update_fields)
-
-    #     if flag:
-    #         pass
-
-    #     return data

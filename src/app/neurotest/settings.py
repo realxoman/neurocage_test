@@ -150,3 +150,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# celery settings
+from celery.schedules import crontab
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_BEAT_SCHEDULE = {
+    "auto_cage_health_checker": {
+        "task": "cages.tasks.auto_cage_health_checker",
+        "schedule": crontab(minute='*/10'),
+    }
+}
+
+# URL Health Checker
+HEALTH_CHECKER_URL = env("HEALTH_CHECKER_URL")

@@ -15,7 +15,7 @@ class CageAnalytical(models.Model):
 
     cage     = models.ForeignKey("cages.Cage", verbose_name=_("Cage Id"), on_delete=models.CASCADE, related_name="cage_related")
     status      = models.PositiveSmallIntegerField(_("Cage Status"), choices=Status.choices)
-    time_taken  = models.PositiveIntegerField(_("Time Taken"), default=0)
+    time_taken  = models.DecimalField(_("Time Taken"), default=0, max_digits=5, decimal_places=3)
     created_at  = models.DateTimeField(_("Cage Analytical Creation Time"), auto_now_add=True)
 
     def __str__(self):

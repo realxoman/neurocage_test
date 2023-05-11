@@ -82,6 +82,7 @@ services:
         "-A",
         "neurotest",
         "worker",
+        "-B",
         "-l",
         "info",
         "-E",
