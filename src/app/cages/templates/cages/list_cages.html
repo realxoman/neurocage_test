@@ -60,7 +60,11 @@
                     {{cage.dimensions}}
                 </td>
                 <td class="px-6 py-4">
-                    {{cage.latest_status_label}}
+                    {% if cage.last_status.get_status_display %}
+                        {{cage.last_status.get_status_display}}
+                    {% else %}
+                        N/A
+                    {% endif %}
                 </td>
                 <td class="px-6 py-4 text-right">
                     <a href="{% url 'cages:detail' pk=cage.id %}" class="font-medium text-blue-600 hover:underline">View Detail</a>

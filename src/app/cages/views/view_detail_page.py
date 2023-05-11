@@ -16,4 +16,7 @@ class CageDetailView(DetailView):
             created_at__date=timezone.now().date()
         )
         context['cage_analytical_today'] = cage_analytical_today
+        perfects_count = cage_analytical_today.filter(status=3).count()
+        if perfects_count:
+            context['functionality_percentages'] = int((perfects_count/len(cage_analytical_today)) * 100)
         return context

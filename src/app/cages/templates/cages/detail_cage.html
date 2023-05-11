@@ -13,7 +13,28 @@
 <div class="flex justify-between">
   <a href="{% url 'cages:list' %}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 "><span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">Back to List of The Cages</span></a>
 </div>
-  <h1 class="text-left mb-5 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-4xl">{{ cage.label }}</h1>
+
+<div class="flex justify-between mt-5">
+    <h1 class="text-left mb-5 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-4xl">{{ cage.label }}</h1>
+    {% if functionality_percentages %}
+<div href="#" class="flex justify-center items-center max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+    {% if functionality_percentages < 50 %}
+        <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+        <div class="text-red-800 font-semibold">
+    {% elif functionality_percentages >= 50 and functionality_percentages < 90 %}
+        <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
+        <div class="text-yellow-800 font-semibold">
+    {% elif functionality_percentages >= 90 %}
+        <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+        <div class="text-green-800 font-semibold">
+    {% endif %}
+            Perfect Status Percentages: 
+            {{functionality_percentages}}
+        </div> 
+    </div> 
+    {% endif %}
+</div>
+
   <div class="flex justify-start w-full flex-col lg:flex-row">
     <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 lg:px-2.5 lg:py-0.5 py-3 my-0.5 rounded border border-green-400"><strong>Cage Color:</strong> {{ cage.color }}</span>
     <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 lg:px-2.5 lg:py-0.5 py-3 my-0.5 rounded border border-blue-400"><strong>Cage Material:</strong> {{ cage.material }}</span>
@@ -22,22 +43,12 @@
     <span class="bg-pink-100 text-pink-800 text-xs font-medium mr-2 lg:px-2.5 lg:py-0.5 py-3 my-0.5 rounded border border-pink-400"><strong>Cage Created at:</strong> {{ cage.created_at }}</span>
   </div>
   
-{% if cage_functionality.get_status_display == 'Bad' %}
-    <div class="h-2.5 w-2.5 rounded-full bg-pink-500 mr-2"></div>
-    <div class="text-pink-800 font-semibold">
-{% elif cage_functionality.get_status_display == 'Ok' %}
-    <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
-    <div class="text-yellow-800 font-semibold">
-{% elif cage_functionality.get_status_display == 'Perfect' %}
-    <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
-    <div class="text-green-800 font-semibold">
-{% else %}
-    <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
-    <div class="text-red-800 font-semibold">
-{% endif %}
 
-    {{cage_functionality.status}}
-</div> 
+  
+
+
+
+
 
 {% if cage_analytical_today %}
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10 pt-3 pb-20">

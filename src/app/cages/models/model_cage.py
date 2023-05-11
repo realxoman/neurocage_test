@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from cages.models.model_cage_analytical import CageAnalytical
 
 class Cage(models.Model):
     class Meta:
@@ -17,3 +17,22 @@ class Cage(models.Model):
 
     def __str__(self):
         return f"{self.label}"
+    
+    @property
+    def last_status(self):
+        last_status = CageAnalytical.objects.filter(cage=self).order_by('-created_at').only('status').first()
+        return last_status
+    
+    # def save(
+    #         self, force_insert=False, force_update=False, using=None, update_fields=None
+    #     ):
+    #     flag = False
+    #     if self.id:
+    #         flag = True
+
+    #     data = super().save(force_insert,force_update,using,update_fields)
+
+    #     if flag:
+    #         pass
+
+    #     return data
