@@ -1,40 +1,6 @@
 version: '3.3'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./src/app/media/:/media/
-      - ./src/app/static/:/static/
-      - /var/log/neurocage/nginx/:/var/log/nginx/
-      - ./src/nginx:/etc/nginx/conf.d
-    depends_on:
-      - web
-      
-
-  db:
-    restart: always
-    image: postgres:latest
-    volumes:
-      - ./src/app/media/:/media/
-      - dbdata:/var/lib/postgresql/data/
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-
   web:
     build: .
     image: neurocage_test-web:latest
@@ -53,7 +19,6 @@ services:
       - ./src/app/:/app/neurocage/
       - ./src/app/static/:/static
       - ./src/app/media/:/app/neurocage/media/
-      - ./sample_data/cagesfile.json:/app/neurocage/sample_data/cagesfile.json
       - /var/log/neurocage:/var/log/neurocage
       - cachedata:/cachec
       - ./src/app/neurocage_test_project/neuroflask.service:/lib/systemd/system/neuroflask.service
@@ -61,9 +26,6 @@ services:
       - 8080:8080
     env_file:
       - .env
-    depends_on:
-      db:
-        condition: "service_healthy"
 
   rabbit:
     hostname: rabbit
@@ -96,8 +58,6 @@ services:
     depends_on:
       rabbit:
         condition: "service_started"
-      db:
-        condition: "service_healthy"
       web:
         condition: "service_started"
       
