@@ -57,8 +57,6 @@ services:
       - /var/log/neurocage:/var/log/neurocage
       - cachedata:/cachec
       - ./src/app/neurocage_test_project/neuroflask.service:/lib/systemd/system/neuroflask.service
-    ports:
-      - 8080:8080
     env_file:
       - .env
     depends_on:
