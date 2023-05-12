@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'neurotest.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if env('ENGINE_DB', default='SQLITE') != 'SQLITE':
+if env('DB_ENGINE', default='SQLITE') != 'SQLITE':
     DATABASES = {
         'default': {
             'ENGINE'    : env("DB_ENGINE"),
@@ -97,9 +97,9 @@ if env('ENGINE_DB', default='SQLITE') != 'SQLITE':
 else:
     DATABASES = {
 
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE'    : 'django.db.backends.sqlite3',
+            'NAME'      : BASE_DIR / 'db.sqlite3',
         }
     }
 

@@ -53,6 +53,7 @@ services:
       - ./src/app/:/app/neurocage/
       - ./src/app/static/:/static
       - ./src/app/media/:/app/neurocage/media/
+      - ./sample_data/cagesfile.json:/app/neurocage/sample_data/cagesfile.json
       - /var/log/neurocage:/var/log/neurocage
       - cachedata:/cachec
       - ./src/app/neurocage_test_project/neuroflask.service:/lib/systemd/system/neuroflask.service
