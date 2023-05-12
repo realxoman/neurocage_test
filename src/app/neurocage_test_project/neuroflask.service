@@ -1,0 +1,12 @@
+[Unit]
+Description=NeuroCage Technical Code Test
+
+[Service]
+User=root
+WorkingDirectory=/app/neurocage/neurocage_test_project/
+ExecStart=/usr/local/bin/python main.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,106 @@
+version: '3.3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./src/app/media/:/media/
+      - ./src/app/static/:/static/
+      - /var/log/neurocage/nginx/:/var/log/nginx/
+      - ./src/nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+      
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - ./src/app/media/:/media/
+      - dbdata:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  web:
+    build: .
+    image: neurocage_test-web:latest
+    container_name: web
+    restart: always
+    command: >
+      sh -c "
+        systemctl start neuroflask.service;
+        systemctl enable neuroflask.service;
+        python manage.py makemigrations;
+        python manage.py migrate;
+        python manage.py collectstatic --noinput;
+        gunicorn --bind=0.0.0.0:8080 --timeout=90 --reload neurotest.wsgi:application;
+      "
+    volumes:
+      - ./src/app/:/app/neurocage/
+      - ./src/app/static/:/static
+      - ./src/app/media/:/app/neurocage/media/
+      - /var/log/neurocage:/var/log/neurocage
+      - cachedata:/cachec
+      - ./src/app/neurocage_test_project/neuroflask.service:/lib/systemd/system/neuroflask.service
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: "service_healthy"
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  celery:
+    build: .
+    image: neurocage_test-web:latest
+    restart: always
+    command:
+      [
+        "celery",
+        "-A",
+        "neurotest",
+        "worker",
+        "-B",
+        "-l",
+        "info",
+        "-E",
+        "--concurrency=10",
+      ]
+    volumes:
+      - ./src/app/:/app/neurocage/
+    env_file:
+      - .env
+    depends_on:
+      rabbit:
+        condition: "service_started"
+      db:
+        condition: "service_healthy"
+      web:
+        condition: "service_started"
+      
+
+volumes:
+  dbdata:
+  cachedata:
